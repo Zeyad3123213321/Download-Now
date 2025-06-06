@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Modern Animated Contact Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --primary: #4facfe;
+      --secondary: #00f2fe;
+      --bg-gradient: linear-gradient(135deg, #141e30, #243b55);
+      --box-bg: rgba(255, 255, 255, 0.1);
+      --glass: blur(16px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--bg-gradient);
+      overflow: hidden;
+      animation: bgPulse 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    .form-box {
+      background: var(--box-bg);
+      padding: 40px 35px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: var(--glass);
+      width: 100%;
+      max-width: 500px;
+      animation: slideUp 1s ease forwards;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #fff;
+      font-size: 30px;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 16px 14px;
+      border-radius: 12px;
+      border: 1.5px solid #ccc;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      transition: 0.3s ease;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--secondary);
+      box-shadow: 0 0 8px var(--secondary);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .form-group label {
+      position: absolute;
+      top: 16px;
+      left: 14px;
+      color: #ddd;
+      pointer-events: none;
+      transition: 0.3s ease;
+      font-size: 16px;
+    }
+
+    .form-group input:focus + label,
+    .form-group input:not(:placeholder-shown) + label,
+    .form-group textarea:focus + label,
+    .form-group textarea:not(:placeholder-shown) + label {
+      top: -12px;
+      left: 12px;
+      background: var(--box-bg);
+      padding: 2px 6px;
+      font-size: 13px;
+      color: var(--secondary);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 17px;
+      font-weight: bold;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      box-shadow: 0 8px 15px rgba(0, 242, 254, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 242, 254, 0.5);
+    }
+
+    button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: left 0.5s ease;
+    }
+
+    button:hover::after {
+      left: 100%;
+    }
+
+    .status {
+      margin-top: 18px;
+      text-align: center;
+      font-weight: bold;
+      color: #0f0;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .form-box {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-box">
+    <h2>Contact Us</h2>
+    <form id="contactForm" autocomplete="off">
+      <div class="form-group">
+        <input type="text" name="name" id="name" placeholder=" " required />
+        <label for="name">Your Name</label>
+      </div>
+
+      <div class="form-group">
+        <input type="email" name="email" id="email" placeholder=" " required />
+        <label for="email">Email Address</label>
+      </div>
+
+      <div class="form-group">
+        <textarea name="message" id="message" placeholder=" " rows="5" required></textarea>
+        <label for="message">Your Message</label>
+      </div>
+
+      <button type="submit">Send Message 🚀</button>
+      <div class="status" id="statusMsg"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    const statusMsg = document.getElementById('statusMsg');
+
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzilQB6hZN7kQE699lqbPuZMrNebyHtczt_j3ucKEXVbGaQhZhJBjL2IOx3IzHG1YXCIQ/exec';
+    const redirectURL = 'animation.html';
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      statusMsg.textContent = 'Sending...';
+      fetch(scriptURL, {
+        method: 'POST',
+        body: new FormData(form)
+      })
+      .then(() => {
+        statusMsg.textContent = '✅ Sent successfully!';
+        setTimeout(() => {
+          window.location.href = redirectURL;
+        }, 2000);
+      })
+      .catch(error => {
+        statusMsg.textContent = '❌ Failed to send.';
+        console.error('Error!', error.message);
+      });
+    });
+  </script>
+
+</body>
+</html>
